@@ -141,20 +141,34 @@ module.exports = {
 		'no-useless-catch': 0,
 		'consistent-return': 0,
 		'no-mixed-spaces-and-tabs': 0,
-		'no-plusplus': 0
-		/*
-		 * 'no-unused-expressions': 0,
-		 * 'chai-friendly/no-unused-expressions': 'off'
-		 */
-	}
-	/*
-	 * 'overrides': [
-	 * 	{
-	 * 		'files': [ './test/*' ],
-	 * 		'rules': {
-	 *   			'chai-friendly/no-unused-expressions': 'on'
-	 * 		}
-	 * 	}
-	 * ]
-	 */
+		'no-plusplus': 0,
+		'no-unused-expressions': 0,
+		'chai-friendly/no-unused-expressions': 2
+	},
+
+	'overrides': [
+		{	
+			'files': [ './test/*' ],
+			'env': {
+				node: true,
+				commonjs: true
+			},
+			'parser': 'babel-eslint',
+			'parserOptions': {
+				'sourceType': 'module'
+			},
+			'plugins': [
+				'chai-friendly/recommended'
+			],
+			'extends': [ 'eslint:recommended',
+			 	'plugin:chai-friendly/recommended' ]
+			/*
+			 * 'extends': [ 'eslint:recommended' ],
+			 * 'rules': {
+			 * 	'no-unused-expressions': 0,
+			 * 	'chai-friendly/no-unused-expressions': 2
+			 * }
+			 */
+		}
+	]
 };
