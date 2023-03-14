@@ -1,12 +1,29 @@
+/* eslint-disable no-unused-vars */
+/* eslint-disable chai-friendly/no-unused-expressions */
 import db from '../../src/models/index.js';
+import { Op } from 'sequelize';
 
 class ItemServices {
 
-	static async getAll () {
+	static async getAll (req) {
 
 		try {
-		
-			let items = await db.items.findAll();
+			
+			let where = {};
+
+			if (req.body.ids && req.body.ids.length > 0) {
+				where.id = {
+					[Op.in]: req.body.ids
+				};
+			}
+
+			else if (req.body.price && req.body.price.length > 0) {
+				where.price = {
+					[Op.between]: [ req.body.price.min, req.body.price.max ]
+				};
+			}
+
+			let items = await db.items.findAll({where, order: [ [ 'id', 'DESC' ] ]});
 			return {type: true, data: items, message: 'Succesfully Items Retrieved'};
 		
 		}

@@ -11,15 +11,26 @@ module.exports = (sequelize, DataTypes) => {
      */
     static associate(models) {
       // define association here
-      users.hasOne(models.customers, {
-        foreignKey: 'id',
-        as: 'customer'
+      // users.hasOne(models.customers, {
+      //   foreignKey: 'id',
+      //   as: 'customer'
+      // });
+      users.hasMany(models.orders, {
+        foreignKey: 'customer_id',
+        as: 'orders'
+      });
+      users.belongsToMany(models.userRoles, {
+        through: 'userUserRoles',
+        as: 'userRoles',
+        foreignKey: 'userId'
       });
     }
   }
   users.init({
     name: DataTypes.STRING,
     password: DataTypes.STRING,
+    phone: DataTypes.INTEGER,
+    email: DataTypes.STRING,
     refresh_token: DataTypes.STRING,
     is_removed: DataTypes.BOOLEAN
   }, {

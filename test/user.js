@@ -19,10 +19,10 @@ describe('Users', () => {
 	});
 
 	describe('/POST user/register', () => {
-    	it('it should not POST a book without name and password', (done) => {
+    	it('it should POST a user with name and password', (done) => {
 			agent
     		    .post('/user/register')
-    			.send({ name: 'test', password: '123' })
+    			.send({ name: 'test', password: '123' , phone: '53453453' ,email: 'test@gmail.com' })
     			.end((err, res) => {
     				res.should.have.status(200);
     				res.body.should.be.a('object');
@@ -60,17 +60,18 @@ describe('Users', () => {
 		});
 	});
 
-	describe('/DELETE/user/delete/:id user', () => {
+	describe('/DELETE user/delete/:id user', () => {
     	it('it should DELETE a user given the id', (done) => {
     			agent
-				.delete('/user/delete/' + 3)
-    				.end((err, res) => {
-    				res.should.have.status(200);
-    				res.body.should.be.a('object');
-    				res.body.should.have.property('message');
-    				res.body.should.have.property('type').eql(true);
-    				done();
-    			});
+					.delete('/user/delete/3')
+						.end((err, res) => {
+						res.should.have.status(200);
+						res.body.should.be.a('object');
+						res.body.should.have.property('message');
+						res.body.should.have.property('type');
+						res.body.message.should.be.eql('Succesfully User Deleted');
+						done();
+					});
     	});
 	});
 

@@ -8,7 +8,9 @@ class UserValidation {
 		
 			const schema = Joi.object({
 				name: Joi.string().min(3).required(),
-				password: Joi.string().required()
+				password: Joi.string().required(),
+				phone: Joi.string().required(),
+				email: Joi.string().email().required()
 			});
 		
 			const { error } = schema.validate(body);

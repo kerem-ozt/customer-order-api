@@ -8,49 +8,24 @@ import OrderValidation from '../validations/order.js';
  * @property {integer} customer_id.required - Some description for point - eg: 1234
  */
 
-/**
- * @swagger
- * @route GET /order/getall
- * @summary endpoint for getting all orders
- * @group Order
- * @returns {array} 200 - An array of orders info
- * @returns {Error} default - Internal server error
- *
- * @typedef Order
- *
- */
-
-/**
- * @swagger
- * @route POST /order/create
- * @summary endpoint for create new order
- * @group Order
- * @param {request.model} body.body.required
- * @returns {orders} 200 - Created order object
- * @returns {Error} default - Internal server error
- *
- * @typedef Order
- *
- */
-
-/**
- * @swagger
- * @route DELETE /order/delete
- * @summary endpoint for delete exist order
- * @group Order
- * @returns {object} 200 - Deleted status
- * @returns {Error} default - Internal server error
- *
- * @typedef Order
- *
- */
-
 class OrderControllers {
+
+	/**
+	 * @swagger
+	 * @route GET /order/getall
+	 * @summary endpoint for getting all orders
+	 * @group Order
+	 * @returns {array} 200 - An array of orders info
+	 * @returns {Error} default - Internal server error
+	 *
+	 * @typedef Order
+	 *
+	 */
 
 	static async getAll (req, res) {
 
 		try {
-			let orders = await OrderServices.getAll();
+			let orders = await OrderServices.getAll(req);
 			if (!orders.type){
 				return res.json({ type: false, message: orders.message });
 			}
@@ -60,7 +35,47 @@ class OrderControllers {
 			return res.json({ type: false, message: error.message });
 		}
 	}
-    
+
+	/**
+	 * @swagger
+	 * @route GET /order/get/{id}
+	 * @param {string} id.path.required - ID
+	 * @summary endpoint for getting all orders
+	 * @group Order
+	 * @returns {array} 200 - An array of orders info
+	 * @returns {Error} default - Internal server error
+	 *
+	 * @typedef Order
+	 *
+	 */
+
+	static async getOrderById (req, res) {
+
+		try {
+			let orders = await OrderServices.getOrderById(req);
+			if (!orders.type){
+				return res.json({ type: false, message: orders.message });
+			}
+			return res.json( { type: true, message: orders.message, data: orders.data} );
+		}
+		catch (error) {
+			return res.json({ type: false, message: error.message });
+		}
+	}
+
+	/**
+	 * @swagger
+	 * @route POST /order/create
+	 * @summary endpoint for create new order
+	 * @group Order
+	 * @param {request.model} body.body.required
+	 * @returns {orders} 200 - Created order object
+	 * @returns {Error} default - Internal server error
+	 *
+	 * @typedef Order
+	 *
+	 */
+
 	static async create (req, res) {
 
 		try {
@@ -80,6 +95,19 @@ class OrderControllers {
 		}
 	}
     
+	/**
+	 * @swagger
+	 * @route DELETE /order/delete/{id}
+	 * @param {string} id.path.required - ID
+	 * @summary endpoint for delete exist order
+	 * @group Order
+	 * @returns {object} 200 - Deleted status
+	 * @returns {Error} default - Internal server error
+	 *
+	 * @typedef Order
+	 *
+	 */
+
 	static async delete (req, res) {
         
 		try {

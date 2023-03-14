@@ -4,6 +4,8 @@
  * @typedef users
  * @property {integer} id.requerid - User id
  * @property {string} name - User name
+ * @property {integer} phone - User phone
+ * @property {string} email - User email
  * @property {string} password - User password
  * @property {string} refresh_token - User refresh token
  * @property {date} createdAt - Created at
@@ -24,15 +26,6 @@
  * @property {integer} id.requerid - Item id
  * @property {string} name - Item name
  * @property {integer} price - Item price
- * @property {date} createdAt - Created at
- * @property {date} updatedAt - Updated at
- */
-
-/**
- * @typedef customers
- * @property {integer} id.requerid - Customer id
- * @property {integer} phone - Customer phone
- * @property {string} email - Customer email
  * @property {date} createdAt - Created at
  * @property {date} updatedAt - Updated at
  */

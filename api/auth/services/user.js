@@ -10,14 +10,11 @@ class UserService {
 		
 			let users = await db.users.findAll({
 				include: [ {
-				  model: db.customers, as: 'customer',
-				  include: [ {
-						model: db.orders, as: 'orders',
-						include: [ {
-							model: db.items, as: 'items'
-						} ]
+					model: db.orders, as: 'orders',
+					include: [ {
+						model: db.items, as: 'items'
+					} ]
 				  } ]
-				} ]
 			  });
 
 			  return {type: true, message: 'Succesfully Users Retrieved', data: users};
@@ -35,7 +32,7 @@ class UserService {
 		
 		try {
 		
-			const {name, password} = req.body;
+			const {name, password, phone, email} = req.body;
 			const oldUser = await db.users.findOne({where: {name}});
 		
 			if (oldUser) {
@@ -47,7 +44,10 @@ class UserService {
 			const encryptedPassword = createHash('md5').update(password).digest('hex');
 			const user = await db.users.create({
 				name,
-				password: encryptedPassword
+				password: encryptedPassword,
+				phone,
+				email,
+				refresh_token: null
 			});
 		
 			return {type: true, message: 'Succesfully User Created', data: user};

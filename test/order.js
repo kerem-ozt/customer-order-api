@@ -44,6 +44,33 @@ describe('Orders', () => {
 					done();
 				});
 		});
+		it('it should GET filtered orders', (done) => {
+			agent
+				.get('/order/getall')
+				.send({ date: ['2021-02-28 16:24:07.513 +0300', '2021-02-28 16:24:07.513 +0300'] })
+				.then(function (res) {
+					res.should.have.status(200);
+					done();
+				});
+		});
+		it('it should GET filtered orders', (done) => {
+			agent
+				.get('/order/getall')
+				.send({ ids: [1, 2] })
+				.then(function (res) {
+					res.should.have.status(200);
+					done();
+				});
+		});
+		it ('it should GET filtered orders', (done) => {
+			agent
+				.get('/order/getall')
+				.send({ date: ['2021-02-28 16:24:07.513 +0300', '2021-02-28 16:24:07.513 +0300'], ids: [1, 2] })
+				.then(function (res) {
+					res.should.have.status(200);
+					done();
+				});
+		});
 	});
 
 	describe('/DELETE/order/delete/:id item', () => {

@@ -73,6 +73,7 @@ app.use('/user', UserRouter);
 app.listen({port: 3000}, async () => {
 	console.log(`listening ${port}`);
 	await sequelize.authenticate();
+	//await sequelize.sync({force: true});
 	console.log('Database Connected!');
 });
 

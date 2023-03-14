@@ -12,17 +12,19 @@ module.exports = {
      *   isBetaMember: false
      * }], {});
     */
-    await queryInterface.bulkInsert('customers', [{
-      phone: 123456789,
-      email: 'customer1@gmail.com',
+    await queryInterface.bulkInsert('rolesPermissions', [{
+      roles_id: 1,
+      permission_id: 1,
       // is_removed: false,
       createdAt: new Date(),
+      updatedAt: new Date()
     }], {});
-    await queryInterface.bulkInsert('customers', [{
-      phone: 987654321,
-      email: 'customer2@gmail.com',
+    await queryInterface.bulkInsert('rolesPermissions', [{
+      roles_id: 2,
+      permission_id: 2,
       // is_removed: false,
       createdAt: new Date(),
+      updatedAt: new Date()
     }], {});
   },
 

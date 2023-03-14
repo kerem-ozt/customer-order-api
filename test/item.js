@@ -43,6 +43,43 @@ describe('Items', () => {
 					done();
 				});
 		});
+		it('it should GET filtered items', (done) => {
+			agent
+				.get('/item/getall')
+				.send({ ids: [1, 2, 3] })
+				.then(function (res) {
+					res.should.have.status(200);
+					res.body.should.have.property('message');
+					res.body.message.should.be.eql('Succesfully Items Retrieved');
+					res.body.should.have.property('type');
+					res.body.type.should.be.eql(true);
+					done();
+				});
+		});
+		it('it should GET filtered items', (done) => {
+			agent
+				.get('/item/getall')
+				.send({ price: { min: 10, max: 20 } })
+				.then(function (res) {
+					res.should.have.status(200);
+					res.body.should.have.property('message');
+					res.body.message.should.be.eql('Succesfully Items Retrieved');
+					res.body.should.have.property('type');
+					res.body.type.should.be.eql(true);
+					done();
+				});
+		});
+		it('it should GET filtered items', (done) => {
+			agent
+				.get('/item/getall')
+				.send({ ids: [1, 2, 3], price: { min: 10, max: 20 } })
+				.then(function (res) {
+					res.should.have.status(200);
+					res.body.should.have.property('message');
+					res.body.message.should.be.eql('Succesfully Items Retrieved');
+					done();
+				});
+		});
 	});
 
 	describe('/DELETE/item/delete/:id item', () => {

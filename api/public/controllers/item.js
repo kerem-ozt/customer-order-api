@@ -8,49 +8,24 @@ import ItemValidation from '../validations/item.js';
  * @property {integer} price.required - Some description for point - eg: 1234
  */
 
-/**
- * @swagger
- * @route GET /item/getall
- * @summary endpoint for getting all items
- * @group Item
- * @returns {array} 200 - An array of items info
- * @returns {Error} default - Internal server error
- *
- * @typedef Item
- *
- */
-
-/**
- * @swagger
- * @route POST /item/create
- * @summary endpoint for create new item
- * @group Item
- * @param {request.model} body.body.required
- * @returns {items} 200 - Created user object
- * @returns {Error} default - Internal server error
- *
- * @typedef Item
- *
- */
-
-/**
- * @swagger
- * @route DELETE /item/delete
- * @summary endpoint for delete exist item
- * @group Item
- * @returns {object} 200 - Deleted status
- * @returns {Error} default - Internal server error
- *
- * @typedef Item
- *
- */
-
 class ItemControllers {
+
+	/**
+	 * @swagger
+	 * @route GET /item/getall
+	 * @summary endpoint for getting all items
+	 * @group Item
+	 * @returns {array} 200 - An array of items info
+	 * @returns {Error} default - Internal server error
+	 *
+	 * @typedef Item
+	 *
+	 */
 
 	static async getAll (req, res) {
 
 		try {
-			let items = await ItemServices.getAll();
+			let items = await ItemServices.getAll(req);
 
 			if (!items.type){
 				return res.json({ type: false, message: items.message });
@@ -61,6 +36,19 @@ class ItemControllers {
 			return res.json({ type: false, message: error.message });
 		}
 	}
+
+	/**
+	 * @swagger
+	 * @route POST /item/create
+	 * @summary endpoint for create new item
+	 * @group Item
+	 * @param {request.model} body.body.required
+	 * @returns {items} 200 - Created user object
+	 * @returns {Error} default - Internal server error
+	 *
+	 * @typedef Item
+	 *
+	 */
 
 	static async create (req, res) {
 
@@ -80,6 +68,19 @@ class ItemControllers {
 			return res.json({ type: false, message: error.message });
 		}
 	}
+
+	/**
+	 * @swagger
+	 * @route DELETE /item/delete/{id}
+	 * @param {string} id.path.required - ID of item
+	 * @summary endpoint for delete exist item
+	 * @group Item
+	 * @returns {object} 200 - Deleted status
+	 * @returns {Error} default - Internal server error
+	 *
+	 * @typedef Item
+	 *
+	 */
 
 	static async delete (req, res) {
 		try {
