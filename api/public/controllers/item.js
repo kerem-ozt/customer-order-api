@@ -3,7 +3,7 @@ import ItemServices from '../services/item.js';
 import ItemValidation from '../validations/item.js';
 
 /**
- * @typedef request
+ * @typedef requestItem
  * @property {string} name.required
  * @property {integer} price.required - Some description for point - eg: 1234
  */
@@ -25,7 +25,7 @@ class ItemControllers {
 	static async getAll (req, res) {
 
 		try {
-			let items = await ItemServices.getAll(req);
+			let items = await ItemServices.getAll(req, req.decoded.language);
 
 			if (!items.type){
 				return res.json({ type: false, message: items.message });
@@ -42,7 +42,7 @@ class ItemControllers {
 	 * @route POST /item/create
 	 * @summary endpoint for create new item
 	 * @group Item
-	 * @param {request.model} body.body.required
+	 * @param {requestItem.model} body.body.required
 	 * @returns {items} 200 - Created user object
 	 * @returns {Error} default - Internal server error
 	 *
@@ -60,7 +60,7 @@ class ItemControllers {
 				return res.json({type: false, message: validation.message});
 			}
 
-			let item = await ItemServices.create(req);
+			let item = await ItemServices.create(req, req.decoded.language);
 			
 			return res.json( { type: item.type, message: item.message, data: item.data} );
 		}
@@ -84,7 +84,7 @@ class ItemControllers {
 
 	static async delete (req, res) {
 		try {
-			let item = await ItemServices.delete(req);
+			let item = await ItemServices.delete(req, req.decoded.language);
 			if (item) {
 				return res.send({type: item.type, message: item.message});
 			}

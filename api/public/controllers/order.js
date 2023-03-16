@@ -3,7 +3,7 @@ import OrderServices from '../services/order.js';
 import OrderValidation from '../validations/order.js';
 
 /**
- * @typedef request
+ * @typedef requestOrder
  * @property {date} date.required
  * @property {integer} customer_id.required - Some description for point - eg: 1234
  */
@@ -25,7 +25,7 @@ class OrderControllers {
 	static async getAll (req, res) {
 
 		try {
-			let orders = await OrderServices.getAll(req);
+			let orders = await OrderServices.getAll(req, req.decoded.language);
 			if (!orders.type){
 				return res.json({ type: false, message: orders.message });
 			}
@@ -52,7 +52,7 @@ class OrderControllers {
 	static async getOrderById (req, res) {
 
 		try {
-			let orders = await OrderServices.getOrderById(req);
+			let orders = await OrderServices.getOrderById(req, req.decoded.language);
 			if (!orders.type){
 				return res.json({ type: false, message: orders.message });
 			}
@@ -68,7 +68,7 @@ class OrderControllers {
 	 * @route POST /order/create
 	 * @summary endpoint for create new order
 	 * @group Order
-	 * @param {request.model} body.body.required
+	 * @param {requestOrder.model} body.body.required
 	 * @returns {orders} 200 - Created order object
 	 * @returns {Error} default - Internal server error
 	 *
@@ -86,7 +86,7 @@ class OrderControllers {
 				return res.json({type: false, message: validation.message});
 			}
 			
-			let order = await OrderServices.create(req);
+			let order = await OrderServices.create(req, req.decoded.language);
 			
 			return res.json({ type: order.type, message: order.message, data: order.data});
 		}
@@ -111,7 +111,7 @@ class OrderControllers {
 	static async delete (req, res) {
         
 		try {
-		    let order = await OrderServices.delete(req);
+		    let order = await OrderServices.delete(req, req.decoded.language);
 			if (order) {
 				return res.send({type: order.type, message: order.message});
 			}

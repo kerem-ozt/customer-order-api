@@ -3,7 +3,7 @@ import UserService from '../services/user';
 import UserValidation from '../../public/validations/user';
 
 /**
- * @typedef request
+ * @typedef requestUser
  * @property {string} name.required
  * @property {string} password.required - Some description for point - eg: 1234
  */
@@ -24,7 +24,7 @@ class UserControllers {
 
 	static async getAll(req, res) {
 		try {
-			const result = await UserService.getAll();
+			const result = await UserService.getAll(req, req.decoded.language);
 			if (!result.type){
 				return res.json({ type: false, message: result.message });
 			}
@@ -40,7 +40,7 @@ class UserControllers {
 	 * @route POST /user/register
 	 * @summary endpoint for create new user
 	 * @group Users
-	 * @param {request.model} body.body.required
+	 * @param {requestUser.model} body.body.required
 	 * @returns {users} 200 - Created user object
 	 * @returns {Error} default - Internal server error
 	 *
@@ -58,7 +58,7 @@ class UserControllers {
 				return res.json({ type: false, message: validation.message });
 			}
 
-			let result = await UserService.register(req);
+			let result = await UserService.register(req, req.decoded.language);
 			
 			return res.json({ type: true, message: result.message, data: result.data });
 		}
@@ -83,7 +83,7 @@ class UserControllers {
 
 	static async delete(req, res) {
 		try {
-			let result = await UserService.delete(req);
+			let result = await UserService.delete(req, req.decoded.language);
 			if (result) {
 				return res.send({type: true, message: result.message});
 			}
@@ -101,17 +101,17 @@ class UserControllers {
 	 * @route POST /user/login
 	 * @summary endpoint for create new token and login
 	 * @group Users
-	 * @param {request.model} body.body.required
+	 * @param {requestUser.model} body.body.required
 	 * @returns {object} 200 - User object which logged in
 	 * @returns {Error} default - Internal server error
 	 *
-	 * @typedef req
+	 * @typedef User
 	 *
 	 */
 
 	static async login(req, res) {
 		try {
-			let result = await UserService.login(req);
+			let result = await UserService.login(req, req.decoded.language);
 			if (result) {
 				return res.json({type: result.type, message: result.message, data: result.data});
 			}
@@ -138,7 +138,7 @@ class UserControllers {
 
 	static async logout (req, res) {
 		try {
-			let result = await UserService.logout(req);
+			let result = await UserService.logout(req, req.decoded.language);
 			return res.json({type: true, message: result.message});
 		}
 		catch (error) {

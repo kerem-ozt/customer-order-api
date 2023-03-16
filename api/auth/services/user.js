@@ -1,10 +1,11 @@
 import db from '../../src/models/index.js';
 import {generateAccessToken, generateRefreshToken} from '../../utils/general/auth.js';
 import { createHash } from 'node:crypto';
+import getLanguage from '../../utils/general/getLanguage.js';
 
 class UserService {
 
-	static async getAll () {
+	static async getAll (req, language) {
 
 		try {
 		
@@ -17,18 +18,18 @@ class UserService {
 				  } ]
 			  });
 
-			  return {type: true, message: 'Succesfully Users Retrieved', data: users};
+			  return {type: true, message: getLanguage(language, 'user_getAll_success'), data: users};
 
 		}
 
 		catch (err) {
 
-			return {type: false, message: `Error while Paginating Users: ${err}`};
+			return {type: false, message: getLanguage(language, 'user_getAll_fail'), err};
 
 		}
 	}
 
-	static async register (req) {
+	static async register (req, language) {
 		
 		try {
 		
@@ -37,7 +38,7 @@ class UserService {
 		
 			if (oldUser) {
 		
-				return {type: true, message: 'User already exists'};
+				return {type: true, message: getLanguage(language, 'user_already_exists')};
 		
 			}
 		
@@ -50,18 +51,18 @@ class UserService {
 				refresh_token: null
 			});
 		
-			return {type: true, message: 'Succesfully User Created', data: user};
+			return {type: true, message: getLanguage(language, 'user_register_success'), data: user};
 		
 		}
 		
 		catch (err) {
 		
-			return {type: false, message: `Error while creating User ${err}`};
+			return {type: false, message: getLanguage(language, 'user_register_fail'), err};
 		
 		}
 	}
 
-	static async delete (req) {
+	static async delete (req, language) {
 
 		try {
 		
@@ -70,25 +71,25 @@ class UserService {
 		
 			if (deletedUser) {
 				await deletedUser.update({is_removed: true});
-				return {type: true, message: 'Succesfully User Deleted'};
+				return {type: true, message: getLanguage(language, 'user_delete_success')};
 		
 			}
 		
 			else {
 		
-				return {type: false, message: 'User not found'};
+				return {type: false, message: getLanguage(language, 'user_not_found')};
 		
 			}
 		}
 		
 		catch (err) {
 		
-			return {type: false, message: `Error while deleting User ${err}`};
+			return {type: false, message: getLanguage(language, 'user_delete_fail'), err};
 		
 		}
 	}
 
-	static async login (req) {
+	static async login (req, language) {
 		
 		try {
 		
@@ -109,36 +110,36 @@ class UserService {
 					{ where: { id: user.id } }
 				);
 
-				return ({ type: true, data: user, message: 'Logged in'});
+				return ({ type: true, data: user, message: getLanguage(language, 'user_login_success')});
 				
 			}
 		
 			else {
 		
-				return { type: false, message: 'Invalid credentials'}; 
+				return { type: false, message: getLanguage(language, 'user_login_fail')}; 
 		
 			}
 		}
 		
 		catch (err) {
 		
-			return {type: false, message: `Error while logging in User ${err}`};
+			return {type: false, message: getLanguage(language, 'user_login_fail'), err};
 		
 		}
 	}
 
-	static async logout (req) {
+	static async logout (req, language) {
 		
 		try {
 		
 			req.session.destroy();
-			return { type: true, message: 'Logged out'};
+			return { type: true, message: getLanguage(language, 'user_logout_success')};
 		
 		}
 		
 		catch (err) {
 		
-			return {type: false, message: `Error while logging out User ${err}`};
+			return {type: false, message: getLanguage(language, 'user_logout_fail'), err};
 		
 		}
 	}

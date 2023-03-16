@@ -2,10 +2,11 @@
 /* eslint-disable chai-friendly/no-unused-expressions */
 import db from '../../src/models/index.js';
 import { Op } from 'sequelize';
+import getLanguage from '../../utils/general/getLanguage.js';
 
 class ItemServices {
 
-	static async getAll (req) {
+	static async getAll (req, language) {
 
 		try {
 			
@@ -24,18 +25,18 @@ class ItemServices {
 			}
 
 			let items = await db.items.findAll({where, order: [ [ 'id', 'DESC' ] ]});
-			return {type: true, data: items, message: 'Succesfully Items Retrieved'};
+			return {type: true, data: items, message: getLanguage(language, 'item_getAll_success')};
 		
 		}
 		
 		catch (err) {
 		
-			return {type: false, data: null, message: `Error while Paginating Items: ${err}`};
+			return {type: false, data: null, message: getLanguage(language, 'item_getAll_fail'), err};
 		
 		}
 	}
     
-	static async create (req) {
+	static async create (req, language) {
 		
 		try {
 		
@@ -45,18 +46,18 @@ class ItemServices {
 				created_at: new Date()
 			});
 		
-			return {  type: true, data: createdItem, message: 'Succesfully Item Created'};
+			return {  type: true, data: createdItem, message: getLanguage(language, 'item_create_success')};
 		
 		}
 		
 		catch (err) {
 		
-			return {type: false, data: null, message: `Error while creating Item: ${err}`};
+			return {type: false, data: null, message: getLanguage(language, 'item_create_fail'), err};
 		
 		}
 	}
     
-	static async delete (req) {
+	static async delete (req, language) {
 		
 		try {
 		
@@ -66,20 +67,20 @@ class ItemServices {
 			if (deletedItem) {
 		
 				await deletedItem.update({is_removed: true});
-				return { type: true, data: deletedItem, message: 'Succesfully Item Deleted'};
+				return { type: true, data: deletedItem, message: getLanguage(language, 'item_delete_success')};
 		
 			}
 		
 			else {
 		
-				return { type: false, data: null, message: 'Item not found'};
+				return { type: false, data: null, message: getLanguage(language, 'item_not_found')};
 		
 			}
 		}
 		
 		catch (err) {
 		
-			return {type: false, data: null, message: `Error while deleting Item: ${err}`};
+			return {type: false, data: null, message: getLanguage(language, 'item_delete_fail'), err};
 		
 		}
 	}

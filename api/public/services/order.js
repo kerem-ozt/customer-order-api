@@ -2,10 +2,11 @@
 import db from '../../src/models/index.js';
 import authorization from '../../utils/general/authorizationfunc.js';
 import { Op } from 'sequelize';
+import getLanguage from '../../utils/general/getLanguage.js';
 
 class OrderServices {
 
-	static async getAll (req) {
+	static async getAll (req, language) {
 
 		try {
 
@@ -26,7 +27,7 @@ class OrderServices {
 			let auth = await authorization.authorizeUser(req, 1);
 			if (auth.type === true){
 				let orders = await db.orders.findAll({where, order: [ [ 'id', 'DESC' ] ]});
-				return {type: true, data: orders, message: 'Succesfully Orders Retrieved'};
+				return {type: true, data: orders, message: getLanguage(language, 'order_getAll_success')};
 			}
 			else {
 				let orders = await db.orders.findAll({
@@ -34,27 +35,27 @@ class OrderServices {
 						customer_id: req.session.userid
 					}
 				});
-				return {type: true, data: orders, message: 'Succesfully Orders Retrieved'};
+				return {type: true, data: orders, message: getLanguage(language, 'order_getAll_fail')};
 			}
 
 		}
 
 		catch (err) {
 
-			return {type: false, data: null, message: `Error while Paginating Orders: ${err}`};
+			return {type: false, data: null, message: getLanguage(language, 'order_getAll_fail'), err};
 
 		}
 
 	}
 
-	static async getOrderById (req) {
+	static async getOrderById (req, language) {
 
 		try {
 			let auth = await authorization.authorizeUser(req, 1);
 			let {id} = req.params;
 			if (auth.type === true){
 				let orders = await db.orders.findByPk(id);
-				return {type: true, data: orders, message: 'Succesfully Orders Retrieved'};
+				return {type: true, data: orders, message: getLanguage(language, 'order_getOrderById_success')};
 			}
 			else {
 				let orders = await db.orders.findAll({
@@ -64,23 +65,23 @@ class OrderServices {
 					}
 				});
 				if (orders.length > 0){
-					return {type: true, data: orders, message: 'Succesfully Orders Retrieved'};
+					return {type: true, data: orders, message: getLanguage(language, 'order_getOrderById_success')};
 				}
 				else {
-					return {type: false, data: null, message: 'Order not found'};
+					return {type: false, data: null, message: getLanguage(language, 'order_getOrderById_fail')};
 				}
 			}
 		}
 
 		catch (err) {
 
-			return {type: false, data: null, message: `Error while Paginating Orders: ${err}`};
+			return {type: false, data: null, message: getLanguage(language, 'order_getOrderById_fail'), err};
 
 		}
 
 	}
     
-	static async create (req) {
+	static async create (req, language) {
 		try {
 			let createdOrder = await db.orders.create({
 				date: req.body.date,
@@ -88,16 +89,16 @@ class OrderServices {
 				created_at: new Date()
 			});
 
-			return { type: true, data: createdOrder, message: 'Succesfully Order Created'};
+			return { type: true, data: createdOrder, message: getLanguage(language, 'order_create_success')};
 		}
 		catch (err){
 
-			return { type: false, message: `Error while creating Order: ${err}` };
+			return { type: false, message: getLanguage(language, 'order_create_fail'), err };
 		
 		}
 	}
     
-	static async delete (req) {
+	static async delete (req, language) {
 
 		try {
 			
@@ -108,11 +109,11 @@ class OrderServices {
 			
 				if (deletedOrder) {
 					await deletedOrder.update({is_removed: true});
-					return {type: true, message: 'Succesfully Order Deleted'};
+					return {type: true, message: getLanguage(language, 'order_delete_success')};
 				}
 			
 				else {
-					return {type: false, message: 'Order not found'};
+					return {type: false, message: getLanguage(language, 'order_not_found')};
 				}
 			}
 			else {
@@ -124,10 +125,10 @@ class OrderServices {
 				});
 				if (deletedOrder.length > 0){
 					await deletedOrder[0].update({is_removed: true});
-					return {type: true, message: 'Succesfully Order Deleted'};
+					return {type: true, message: getLanguage(language, 'order_delete_success')};
 				}
 				else {
-					return {type: false, message: 'Order not found'};
+					return {type: false, message: getLanguage(language, 'order_not_found')};
 				}
 			}
 		
@@ -135,7 +136,7 @@ class OrderServices {
 		
 		catch (err) {
 		
-			return { type: false, message: `Error while deleting Order: ${err}` };
+			return { type: false, message: getLanguage(language, 'order_delete_fail'), err };
 		
 		}
 	}

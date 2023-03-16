@@ -52,12 +52,23 @@ let options = {
 			'application/xml'
 		],
 		schemes: [ 'http', 'https' ],
+		security: [
+			{
+				JWT: [],
+				language: []
+			}
+		],
 		securityDefinitions: {
 			JWT: {
 				type: 'apiKey',
 				in: 'header',
 				name: 'Authorization',
 				description: ''
+			},
+			language: {
+				type: 'apiKey',
+				in: 'header',
+				name: 'language'
 			}
 		}
 	},
@@ -65,6 +76,13 @@ let options = {
 	files: [ './**/*.js' ]
 };
 expressSwagger(options);
+
+app.use((req, res, next) => {
+	req.decoded = {
+		language: req.headers.language ? req.headers.language : 'en'
+	};
+	next();
+});
 
 app.use('/order', verifyToken, OrderRouter);
 app.use('/item', verifyToken, ItemRouter);
